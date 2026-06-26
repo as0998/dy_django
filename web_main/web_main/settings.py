@@ -23,24 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-xpbog$31$l@hn3lrfo%$=!72!d66l+78+gx^8w8f$&4t5i_3n@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
+DEBUG = False
 ALLOWED_HOSTS = ['*']
 
-# HTTPS 환경에서만 세션 쿠키 전송
-# SESSION_COOKIE_SECURE = True
 
-# # HTTPS 환경에서만 CSRF 쿠키 전송
-# CSRF_COOKIE_SECURE = True
-
-# # 브라우저에 항상 HTTPS로만 연결하도록 강제 (HSTS 설정)
-# # (운영 환경 적용 전 반드시 사전 테스트 권장)
-# SECURE_HSTS_SECONDS = 31536000  # 1년
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
-
-# # 프록시 서버(Nginx)를 사용할 때 요청이 secure한지 올바르게 인식하도록 설정
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_TRUSTED_ORIGINS = ['https://*.cloudtype.app']
 
 
@@ -52,10 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'win_start',
+    'corsheaders',
     # 'sslserver',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+       'whitenoise.middleware.WhiteNoiseMiddleware', ## 이거 추가!!
 ]
 
 ROOT_URLCONF = 'web_main.urls'
@@ -129,6 +119,8 @@ TIME_ZONE = 'Asia/seoul'
 USE_I18N = True
 
 USE_TZ = False
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -139,3 +131,14 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',  # 또는 os.path.join(BASE_DIR, 'static')
 ]
+
+# 환경변수 세팅  django.template.context_processors.debug
+
+# import os, environ
+# env = environ.Env(DEBUG=(bool, False))
+# environ.Env.read_env(
+#     env_file=os.path.join(BASE_DIR, '.env')
+# )
+
+# SECRET_KEY = env('SECRET_KEY')
+# DEBUG = env("DEBUG")
